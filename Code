@@ -1,7 +1,8 @@
-Reset identity seed after deleting records in SQL Server
-    DBCC CHECKIDENT ('UserKeyMapping', RESEED, -1)
+Reset identity seed after deleting records in SQL Server then the first row will get the identity = 1.
+    DBCC CHECKIDENT ('MyTable', RESEED, 0)
     GO
-    
+OR
+    TRUNCATE TABLE [MyTable];
 --------------------------------------------------
 http://www.epochconverter.com/
  to save date in miliseconds
