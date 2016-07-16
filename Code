@@ -3,3 +3,61 @@ Reset identity seed after deleting records in SQL Server
     GO
     
 --------------------------------------------------
+http://www.epochconverter.com/
+ to save date in miliseconds
+ SELECT DATEDIFF(s, '1970-01-01 00:00:00',GETUTCDATE()
+
+--------------------------------------------------
+Richa Patel  15.07.2016  to insert or update key user Generate key mapping
+
+*/
+ALTER PROCEDURE [dbo].[USP_MM_MD_Insert_UserGenerateKey]
+    @intGlCode BIGINT ,
+    @varKey NVARCHAR(50) ,
+    @fk_UserGlCode INT ,
+    @ref_EntryBy INT
+AS
+    BEGIN       
+        DECLARE @intReutrn BIGINT
+        IF ( @intGlCode > 0 )
+            BEGIN
+
+                UPDATE  dbo.UserKeyMapping
+                SET     isActive = 'False' ,
+                        ref_UpdateBy = @ref_EntryBy ,
+                        intRevokeDate = ( SELECT    DATEDIFF(s,
+                                                             '1970-01-01 00:00:00',
+                                                             GETUTCDATE())
+                                        ) ,
+                        intUpdateDate = ( SELECT    DATEDIFF(s,
+                                                             '1970-01-01 00:00:00',
+                                                             GETUTCDATE())
+                                        )
+                WHERE   intGlCode = @intGlCode
+                SELECT  @intReutrn = @intGlCode
+                
+			
+            END
+        ELSE
+            BEGIN			
+                INSERT  INTO dbo.UserKeyMapping
+                        ( varKey ,
+                          fk_UserGlCode ,
+                          isActive ,
+                          intEntryDate ,
+                          ref_EntryBy
+                        )
+                VALUES  ( @varKey ,
+                          @fk_UserGlCode ,
+                          'True' ,
+                          ( SELECT  DATEDIFF(s, '1970-01-01 00:00:00',
+                                             GETUTCDATE())
+                          ) ,
+                          @ref_EntryBy 
+                        )
+                        
+                SELECT  @intReutrn = SCOPE_IDENTITY() 
+                
+            END           
+        SELECT  @intReutrn AS KeyID
+    END
