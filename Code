@@ -1,0 +1,5 @@
+Reset identity seed after deleting records in SQL Server
+    DBCC CHECKIDENT ('UserKeyMapping', RESEED, -1)
+    GO
+    
+--------------------------------------------------
