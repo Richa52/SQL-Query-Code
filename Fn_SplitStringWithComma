@@ -1,0 +1,26 @@
+ALTER    function [dbo].[Fn_SplitStringWithComma] ( @Str varchar(max) )       
+returns @tempID table ( id1 bigint )       
+as begin       
+    declare @i bigint       
+    while( len(@Str) > 0 )       
+        begin       
+         
+            set @i = charIndex(',', @Str)       
+            if ( @i = 0 )        
+                begin       
+                    insert  into @tempID ( id1 )       
+                    values  ( Convert(bigint, @Str) )        
+                    break        
+                end         
+            Else        
+                begin       
+                    if ( Len(substring(@Str, 0, @i)) > 0 )        
+                        insert  into @tempID ( id1 )       
+                        values  (       
+                                  Convert(bigint, substring(@Str, 0, @i))        
+                                )       
+                    Set @Str = substring(@Str, @i + 1, len(@Str))       
+                end       
+        end       
+    return       
+   end
