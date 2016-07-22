@@ -1,0 +1,45 @@
+Demo Multiple rows to one comma-separated value [duplicate]
+
+SubjectID       StudentName
+----------      -------------
+1               Mary
+1               Mary
+1               Sam
+2               Alaina
+2               Edward
+Result I expected was:
+
+SubjectID       StudentName
+----------      -------------
+1               Mary, John, Sam
+2               Alaina, Edward
+
+
+	DECLARE @Table1 TABLE(ID INT, name nvarchar(100))
+INSERT INTO @Table1 VALUES (1,'Mary'),(1,'Mary'),(1,'Sam'),(2,'Alaina'),(2,'Edward')
+SELECT* FROM @Table1 t
+
+
+SELECT  ID
+       ,STUFF((SELECT ', ' + CAST(name AS VARCHAR(100)) [text()]
+         FROM @Table1 
+         WHERE ID = t.ID
+         FOR XML PATH(''), TYPE)
+        .value('.','NVARCHAR(MAX)'),1,2,' ') List_Output
+FROM @Table1 t
+GROUP BY ID
+
+-*--------------------------------------------------------------------------
+
+
+/*
+STUFF((SELECT ', ' + CAST(PM.varPlantName AS nVARCHAR(Max)) 
+FROM dbo.UserKeyMapping UM
+INNER JOIN dbo.KeyAccessRights KA ON UM.intGlCode = KA.fk_KeyGlCode
+INNER JOIN dbo.Plant_Mst PM ON PM.intGlCode = KA.fk_PlantGlCode
+    
+FOR XML PATH('')),1,1,'') as varPlantName
+
+*/
+
+
