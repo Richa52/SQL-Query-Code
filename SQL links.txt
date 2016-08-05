@@ -1,0 +1,4 @@
+http://blog.sqlauthority.com/2013/09/25/sql-server-how-to-access-the-previous-row-and-next-row-value-in-select-statement-part-4/
+
+http://www.kodyaz.com/articles/t-sql-pivot-tables-in-sql-server-tutorial-with-examples.aspx
+http://sqlhints.com/tag/daily-data-using-pivot/
