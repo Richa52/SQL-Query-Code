@@ -1,0 +1,25 @@
+create PROCEDURE [dbo].[USP_MM_MD_GetGenerateKeyCount]
+
+    @fk_UserGlCode INT 
+AS
+    BEGIN   
+		DECLARE @valReutrn INT
+		DECLARE @TOTALCOUNT INT
+		DECLARE @FILTEREDCOUNT INT
+		DECLARE @TEMP TABLE(
+		TIMESTAMP DATE NOT NULL)
+
+			IF ( 2 > 0 )
+            BEGIN
+				INSERT INTO @TEMP
+				SELECT  (SELECT CAST((SELECT DATEADD(S, intEntryDate, '1970-01-01')) AS DATE)) AS TIMESTAMP 
+				FROM  dbo.API_Log
+				WHERE fk_UserGlCode = 2 
+
+				SET @TOTALCOUNT = ( SELECT COUNT(*) FROM ( SELECT * FROM @TEMP t WHERE t.TIMESTAMP = (select convert(date, getdate())) GROUP BY TIMESTAMP ) GroupedTimeStamps )
+				
+
+			END
+			SET @valReutrn = (SELECT @TOTALCOUNT)
+			SELECT  @valReutrn AS TotalCount
+    END
